@@ -1,0 +1,53 @@
+# Docker for Mac >= 1.12, Linux, Docker for Windows 10
+docker run --rm -it \
+           -p 2181:2181 -p 3030:3030 -p 8081:8081 \
+           -p 8082:8082 -p 8083:8083 -p 9092:9092 \
+           -e ADV_HOST=127.0.0.1 \
+           landoop/fast-data-dev
+
+# test url
+http://127.0.0.1:3030/
+
+# Kafka command lines tools
+docker run --rm -it --net=host landoop/fast-data-dev bash
+
+# Kafka command line commands
+
+# all kafka commands
+kafka-<TAB>
+
+# create a topic
+kafka-topics --zookeeper 127.0.0.1:2181 --create --partitions 3 --replication-factor 1 --topic MyTopic
+kafka-topics --zookeeper 127.0.0.1:2181 --create --partitions 3 --replication-factor 1 --topic MyTopic1
+kafka-topics --zookeeper 127.0.0.1:2181 --create --partitions 3 --replication-factor 1 --topic MyTopic1
+(fails already exists)
+
+# list topics
+kafka-topics --zookeeper 127.0.0.1:2181 --list
+
+# delete a topic
+kafka-topics --zookeeper 127.0.0.1:2181 --delete --topic MyTopic1
+
+# describe a topic
+kafka-topics --zookeeper 127.0.0.1:2181 --describe --topic MyTopic
+
+
+# create messages
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic MyTopic
+kafka-console-producer --broker-list 127.0.0.1:9092 --topic NewTopic
+(error message LEADER_NOT_AVAILABLE, but topic is created)
+
+# consume new messages
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic MyTopic
+
+# consume all messages
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --from-beginning --topic MyTopic
+
+# consume all messages from partition 2
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --from-beginning --partition 2 --topic MyTopic
+
+# consume within group id (does not reconsume)
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --from-beginning --topic MyTopic --consumer-property group.id=mygroup1
+
+
+
